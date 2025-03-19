@@ -2,7 +2,7 @@
 
 This is just a playground project, so that I have some fun with Rust and WASM
 
-Go here to see it working: https://github.com/diversable/deploy_leptos_csr_to_gh_pages
+Go here to see it working: https://marinho.github.io/lets-count-the-workouts/
 
 ## Required toolings
 

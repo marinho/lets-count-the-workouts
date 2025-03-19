@@ -2,6 +2,7 @@ use constants::APP_TITLE;
 use leptos::prelude::*;
 use leptos_meta::*;
 use leptos_router::{components::*, path};
+use web_sys::window;
 
 // Modules
 mod components;
@@ -14,6 +15,23 @@ use crate::models::workout::Workout;
 use crate::models::workout_set::WorkoutSet;
 use crate::pages::home::Home;
 
+fn get_base_path() -> String {
+    let window = window().unwrap();
+    let pathname = window
+        .location()
+        .pathname()
+        .expect("pathname should be available");
+
+    let base_path = pathname
+        .split('/')
+        .filter(|segment| !segment.is_empty())
+        .next()
+        .map(|segment| format!("/{}", segment))
+        .unwrap_or_else(|| "/".to_string());
+
+    return base_path;
+}
+
 /// An app router which renders the homepage and handles 404's
 #[component]
 pub fn App() -> impl IntoView {
@@ -21,6 +39,8 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     let (workouts, set_workouts) = signal::<Vec<Workout>>(Vec::new());
+
+    let base_path = get_base_path();
 
     view! {
         <Html attr:lang="en" attr:dir="ltr" attr:data-theme="light" />
@@ -32,7 +52,7 @@ pub fn App() -> impl IntoView {
         <Meta charset="UTF-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <Router>
+        <Router base=base_path>
             <Routes fallback=|| view! { NotFound }>
                 <Route
                     path=path!("/")
